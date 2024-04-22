@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./styles/index.css">
+  <title>Node+React实战</title>
+</head>
+
+<body>
+  <div class="book-view">
+    <div class="menu">
+    </div>
+    <div class="content">
+    </div>
+  </div>
+  <script>
+    function getPngFiles() {
+      fetch('http://localhost:3000/getPngFiles/?file=NodeReact')
+        .then(response => response.json())
+        .then(data => {
+          var imgTags = data.map(function (url, index) {
+            if (index === 0) {
+              return '<img src="' + `../NodeReact/${url}` + '" alt="Image" class="show">';
+            }
+            return '<img src="' + `../NodeReact/${url}` + '" alt="Image">';
+          });
+          var menuTags = data.map(function (url, index) {
+            if (index === 0) {
+              return '<div class="menu-item active">' + url.substring(0, url.length - 4) + '</div>';
+            }
+            return '<div class="menu-item">' + url.substring(0, url.length - 4) + '</div>';
+          });
+
+          document.querySelector('.content').innerHTML = imgTags.join('')
+          document.querySelector('.menu').innerHTML = menuTags.join('')
+          document.querySelectorAll('.menu-item').forEach((el, index) => {
+            el.addEventListener("click", function () {
+              drapImg(index)
+            });
+          })
+        })
+        .catch(error => console.error(error));
+    }
+    getPngFiles()
+
+    function drapImg(index) {
+      document.querySelectorAll('.content img').forEach((el, i) => {
+        if (index === i) {
+          el.className = 'show'
+        } else {
+          el.className = ''
+        }
+      })
+      document.querySelectorAll('.menu-item').forEach((el, i) => {
+        if (index === i) {
+          el.className = 'menu-item active'
+        } else {
+          el.className = 'menu-item'
+        }
+      })
+      document.querySelector('.content').scrollTo(0, 0);
+    }
+  </script>
+</body>
+
+</html>
